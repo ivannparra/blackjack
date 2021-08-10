@@ -85,7 +85,7 @@ function suffleCardsBank() {
     cardOneBank.textContent = bankHand.firstCard
     cardTwoBank.textContent = "Hidden still" // hidden until the user doesn't request more cards
     bankHand.totalResult = getResult(bankHand)
-    totalResultBank.textContent = bankHand.firstCard + " upside down card" // not yet displaying total result, just 1st card, 2nd card still hidden
+    totalResultBank.textContent = bankHand.firstCard + " + an upside down card" // not yet displaying total result, just 1st card, 2nd card still hidden
     partialResult() 
 }
 
