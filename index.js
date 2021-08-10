@@ -1,18 +1,30 @@
 
 //Variable initialization for user cards
-let firstCard
-let secondCard
-let thirdCard = null
-let fourthCard = null
-let fifthCard = null
-let sumCard
+const userHand = {
+  firstCard: 0,
+  secondCard: 0,
+  thirdCard: 0,
+  fourthCard: 0,
+  fifthCard: 0,
+  sixthCard: 0,
+  totalResult: 0,
+  message: ""  
+}
+
+
+
 //Variable initialization for bank/croupier cards
-let firstCardBank
-let secondCardBank
-let thirdCardBank = null
-let fourthCardBank = null
-let fifthCardBank = null
-let sumCardBank
+const bankHand = {
+  firstCard:0,
+  secondCard:0,
+  thirdCard:0,
+  fourthCard:0,
+  fifthCard: 0,
+  sixthCard: 0,
+  totalResult:0,
+  message: ""
+}
+
 
 //HTML divs, p and h1
 let cardOne = document.getElementById("card-1")
@@ -22,7 +34,9 @@ let cardThreeDiv = document.getElementById("div-card3")
 let cardFour = document.getElementById("card-4")
 let cardFourDiv = document.getElementById("div-card4")
 let cardFive = document.getElementById("card-5")
+let cardSix = document.getElementById("card-6")
 let cardFiveDiv = document.getElementById("div-card5")
+let cardSixDiv = document.getElementById("div-card6")
 let totalResult = document.getElementById("total")
 let cardOneBank = document.getElementById("card-1-bank")
 let cardTwoBank = document.getElementById("card-2-bank")
@@ -31,7 +45,9 @@ let cardThreeBankDiv = document.getElementById("div-card3-bank")
 let cardFourBank = document.getElementById("card-4-bank")
 let cardFourBankDiv = document.getElementById("div-card4-bank")
 let cardFiveBank = document.getElementById("card-5-bank")
+let cardSixBank = document.getElementById("card-6-bank")
 let cardFiveBankDiv = document.getElementById("div-card5-bank")
+let cardSixBankDiv = document.getElementById("div-card6-bank")
 let totalResultBank = document.getElementById("total-bank")
 let totalStatus = document.getElementById("total-status")
 
@@ -42,106 +58,124 @@ let elButtonShuffle = document.getElementById("shuffle-cards")
 let elButtonHold = document.getElementById("hold-button")
 let elButtonStart = document.getElementById("start-over")
 
+//Obtain total result
+const getResult = (hand) => {
+  return hand.firstCard + hand.secondCard + hand.thirdCard + hand.fourthCard + hand.fifthCard
+}
+
 //Shuffle 2 first cards for the user and the bank
 function getRandomCard(min, max) {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
-function shuffleCards() {
-    firstCard = getRandomCard(2, 11)
-    secondCard = getRandomCard(2, 11)
-    firstCardBank = getRandomCard(2, 11)
-    secondCardBank = getRandomCard(2, 11)
-    cardOne.textContent = firstCard
-    cardTwo.textContent = secondCard
-    sumCard = firstCard + secondCard
-    totalResult.textContent = sumCard
-    cardOneBank.textContent = firstCardBank
-    cardTwoBank.textContent = "hidden still" // hidden until the user doesn't request more cards
-    sumCardBank = firstCardBank + secondCardBank
-    totalResultBank.textContent = firstCardBank // not yet displaying total result, 2nd card still hidden 
+function shuffleCardsUser() {
+    userHand.firstCard = getRandomCard(2, 11)
+    userHand.secondCard = getRandomCard(2, 11)    
+    cardOne.textContent = userHand.firstCard
+    cardTwo.textContent = userHand.secondCard
+    userHand.totalResult = getResult(userHand)
+    totalResult.textContent = userHand.totalResult
     elButtonShuffle.disabled = true
-    partialResult()      
+    suffleCardsBank()
 }
+
+function suffleCardsBank() { 
+    bankHand.firstCard = getRandomCard(2, 11)
+    bankHand.secondCard = getRandomCard(2, 11)
+    cardOneBank.textContent = bankHand.firstCard
+    cardTwoBank.textContent = "Hidden still" // hidden until the user doesn't request more cards
+    bankHand.totalResult = getResult(bankHand)
+    totalResultBank.textContent = bankHand.firstCard + " upside down card" // not yet displaying total result, just 1st card, 2nd card still hidden
+    partialResult() 
+}
+
+
 
 //Enables Another Card and Hold button after sumCard < 21
 function enableAnotherCardAndHoldButton() {
-  if (thirdCard == null) {
     elButton.disabled = false
     elButtonHold.disabled = false     
-  }
 }
 
 // When user presses anotherCard button
 function anotherCard() {
-    if (thirdCard == null){
-      thirdCard = getRandomCard(2, 11)    
-      cardThree.textContent = thirdCard    
-      sumCard = firstCard + secondCard + thirdCard    
-      totalResult.textContent = sumCard
+    if (userHand.thirdCard == 0){
+      userHand.thirdCard = getRandomCard(2, 11)    
+      cardThree.textContent = userHand.thirdCard    
+      userHand.totalResult = getResult(userHand) 
+      totalResult.textContent = userHand.totalResult
       cardThreeDiv.hidden = false
-    } else if (thirdCard != null && fourthCard == null) {
-      fourthCard = getRandomCard(2, 11)    
-      cardFour.textContent = fourthCard    
-      sumCard = firstCard + secondCard + thirdCard + fourthCard  
-      totalResult.textContent = sumCard
+    } else if (userHand.thirdCard != 0 && userHand.fourthCard == 0) {
+      userHand.fourthCard = getRandomCard(2, 11)    
+      cardFour.textContent = userHand.fourthCard    
+      userHand.totalResult = getResult(userHand)  
+      totalResult.textContent = userHand.totalResult
       cardFourDiv.hidden = false
-    } else if (thirdCard != null && fourthCard != null && fifthCard == null) {
-      fifthCard = getRandomCard(2, 11)    
-      cardFive.textContent = fifthCard    
-      sumCard = firstCard + secondCard + thirdCard + fourthCard + fifthCard
-      totalResult.textContent = sumCard
+    } else if (userHand.thirdCard != 0 && userHand.fourthCard != 0 && userHand.fifthCard == 0) {
+      userHand.fifthCard = getRandomCard(2, 11)    
+      cardFive.textContent = userHand.fifthCard    
+      userHand.totalResult = getResult(userHand)
+      totalResult.textContent = userHand.totalResult
       cardFiveDiv.hidden = false
-    }
+    } else if (userHand.thirdCard != 0 && userHand.fourthCard != 0 && userHand.fifthCard != 0 && userHand.sixthCard)
+      userHand.sixthCard = getRandomCard(2, 11)    
+      cardSix.textContent = userHand.sixthCard    
+      userHand.totalResult = getResult(userHand)
+      totalResult.textContent = userHand.totalResult
+      cardSixDiv.hidden = false
  partialResult()    
-}
-
-//After user press hold button
-function bankShowCards() {
-  cardTwoBank.textContent = secondCardBank
-  totalResultBank.textContent = firstCardBank + secondCardBank
-  bankIA()  
-}
-
-//After user press hold button and bank showed cards
-function bankIA() {
-  if (sumCardBank < 17) {
-    anotherCardBank()
-  } else if (sumCardBank > 17) {
-    endResult()
-  }  
-}
-
-//After user press hold button and sumCardBank < 17
-function anotherCardBank() {
-  if (thirdCardBank == null){
-    thirdCardBank = getRandomCard(2, 11)    
-    cardThreeBank.textContent = thirdCardBank
-    cardThreeBankDiv.hidden = false   
-    sumCardBank = firstCardBank + secondCardBank + thirdCardBank    
-    totalResultBank.textContent = sumCardBank
-    bankIA()
-  } else if (thirdCardBank != null && fourthCardBank == null) {
-    fourthCardBank = getRandomCard(2, 11)    
-    cardFourBank.textContent = fourthCardBank   
-    cardFourBankDiv.hidden = false   
-    sumCardBank = firstCardBank + secondCardBank + thirdCardBank + fourthCardBank   
-    totalResultBank.textContent = sumCardBank
-    bankIA()
-  } else if (thirdCardBank != null && fourthCardBank != null && fifthCardBank == null) {
-    fifthCardBank = getRandomCard(2, 11)    
-    cardFiveBank.textContent = fifthCardBank 
-    cardFiveBankDiv.hidden = false     
-    sumCardBank = firstCardBank + secondCardBank + thirdCardBank + fourthCardBank + fifthCardBank
-    totalResultBank.textContent = sumCardBank
-    bankIA()
-  }  
 }
 
 //When user press hold button
 function hold() {
   bankShowCards()   
 }
+
+//After user press hold button
+function bankShowCards() {
+  cardTwoBank.textContent = bankHand.secondCard
+  totalResultBank.textContent = bankHand.totalResult
+  bankIA()  
+}
+
+//After user press hold button and bank showed cards
+function bankIA() {
+  if (bankHand.totalResult < 17) {
+    anotherCardBank()
+  } else if (bankHand.totalResult >= 17) {
+    endResult()
+  }  
+}
+
+//After user press hold button and sumCardBank < 17
+function anotherCardBank() {
+  if (bankHand.thirdCard == 0){
+    bankHand.thirdCard = getRandomCard(2, 11)    
+    cardThreeBank.textContent = bankHand.thirdCard
+    cardThreeBankDiv.hidden = false   
+    bankHand.totalResult = getResult(bankHand)
+       
+  } else if (bankHand.thirdCard != 0 && bankHand.fourthCard == 0) {
+    bankHand.fourthCard = getRandomCard(2, 11)    
+    cardFourBank.textContent = bankHand.fourthCard   
+    cardFourBankDiv.hidden = false   
+    bankHand.totalResult = getResult(bankHand)   
+       
+  } else if (bankHand.thirdCard != 0 && bankHand.fourthCard != 0 && bankHand.fifthCard == 0) {
+    bankHand.fifthCard = getRandomCard(2, 11)    
+    cardFiveBank.textContent = bankHand.fifthCardBank 
+    cardFiveBankDiv.hidden = false     
+    bankHand.totalResult = getResult(bankHand)        
+  } else if (bankHand.thirdCard != 0 && bankHand.fourthCard != 0 && bankHand.fifthCard != 0 && bankHand.sixthCard) {
+    bankHand.sixthCard = getRandomCard(2, 11)    
+    cardSixBank.textContent = bankHand.sixthCardBank 
+    cardSixBankDiv.hidden = false     
+    bankHand.totalResult = getResult(bankHand)        
+  } 
+  totalResultBank.textContent = bankHand.totalResult  
+  bankIA() 
+}
+
 // Button status change
 function disableButtons() {
   elButton.disabled = true
@@ -151,41 +185,39 @@ function disableButtons() {
 }
 
 
-
-
 //Calculation of partial results, before bank showed cards
 function partialResult() {
-  if (sumCard == 21) {
+  if (userHand.totalResult == 21) {
     totalStatus.textContent = "It's black jack, you win"
     disableButtons() //Enable buttons to restart game
-  } else if (sumCard < 21) {
-    totalStatus.textContent = "You got " + sumCard + " " + "and the Bank got " + firstCardBank + " so far. You can request a card or Hold"
+  } else if (userHand.totalResult < 21) {
+    totalStatus.textContent = "You got " + userHand.totalResult + " " + "and the Bank got " + bankHand.firstCard + " so far. You can request a card or Hold"
     enableAnotherCardAndHoldButton()  //Enable buttons to request more cards or hold 
- } else if (sumCard > 21) {
-    totalStatus.textContent = "You got " + sumCard + " " + "You went over 21, the bank doesn't even need to play!"
+ } else if (userHand.totalResult > 21) {
+    totalStatus.textContent = "You got " + userHand.totalResult + " " + "You went over 21, the bank doesn't even need to play!"
     disableButtons()
  }
 }
 
 //Final result after bank showed cards
 function endResult() {
-if (sumCard == 21) {
-  totalStatus.textContent = "You got " + sumCard + " It's Black Jack, you win!"
+if (userHand.totalResult == 21) {
+  totalStatus.textContent = "You got " + userHand.totalResult + " It's Black Jack, you win!"
   
-} else if (sumCardBank == 21) {
-  totalStatus.textContent = "Bank got " + sumCardBank + " It's Black Jack, you loose!"
+} else if (bankHand.totalResult == 21) {
+  totalStatus.textContent = "Bank got " + bankHand.totalResult + " It's Black Jack, you loose!"
      
-} else if (sumCard > 21) {
-  totalStatus.textContent = "You got " + sumCard + " It's over 21, you loose"
+} else if (userHand.totalResult > 21) {
+  totalStatus.textContent = "You got " + userHand.totalResult + " It's over 21, you loose"
   
-} else if (sumCard < 21 && sumCard > sumCardBank) {
-  totalStatus.textContent = "You got " + sumCard + " " + "and the Bank got " + sumCardBank + ". You win!"
+} else if (userHand.totalResult < 21 && userHand.totalResult > bankHand.totalResult) {
+  totalStatus.textContent = "You got " + userHand.totalResult + " " + "and the Bank got " + bankHand.totalResult + ". You win!"
    
-  } else if (sumCard < 21 && sumCardBank < 21 && sumCard < sumCardBank) {
-  totalStatus.textContent = "You got " + sumCard + " " + "and the Bank got " + sumCardBank +". You loose!"
+  } else if (userHand.totalResult < 21 && bankHand.totalResult < 21 && userHand.totalResult < bankHand.totalResult) {
+  totalStatus.textContent = "You got " + userHand.totalResult + " " + "and the Bank got " + bankHand.totalResult +". You loose!"
   
-} else if (sumCard < 21 && sumCardBank > 21) {
-  totalStatus.textContent = "You got " + sumCard + " " + "and the Bank got " + sumCardBank +". It's over 21, you win!"
+} else if (userHand.totalResult < 21 && bankHand.totalResult > 21) {
+  totalStatus.textContent = "You got " + userHand.totalResult + " " + "and the Bank got " + bankHand.totalResult +". It's over 21, you win!"
   
 }
   disableButtons()
@@ -200,18 +232,18 @@ function restartButtonStatus() {
 }
 
 function startOver() {
-  firstCard = null
-  secondCard = null
-  thirdCard = null
-  fourthCard = null
-  fifthCard = null
-  sumCard = null
-  firstCardBank = null
-  secondCardBank = null
-  thirdCardBank = null
-  fourthCardBank = null
-  fifthCardBank = null
-  sumCardBank = null
+  userHand.firstCard = 0
+  userHand.secondCard = 0
+  userHand.thirdCard = 0
+  userHand.fourthCard = 0
+  userHand.fifthCard = 0
+  userHand.totalResult = 0
+  bankHand.firstCard = 0
+  bankHand.secondCard = 0
+  bankHand.thirdCard = 0
+  bankHand.fourthCard = 0
+  bankHand.fifthCard = 0
+  bankHand.totalResult = 0
   cardOne.textContent = "..."
   cardTwo.textContent = "..."
   cardThree.textContent = "..."
